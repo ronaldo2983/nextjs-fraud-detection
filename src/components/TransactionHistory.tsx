@@ -15,8 +15,10 @@ export default function TransactionHistory() {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
     useEffect(() => {
-        async function fetchHistory() {
-            // Lógica para obtener el historial de transacciones
+        function fetchHistory() {
+            // Obtener el historial de transacciones de localStorage
+            const existingTransactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+            setTransactions(existingTransactions);
         }
         fetchHistory();
     }, []);
@@ -44,7 +46,9 @@ export default function TransactionHistory() {
                                 <td className="border px-4 py-2">{tx.location}</td>
                                 <td className="border px-4 py-2">{tx.merchant}</td>
                                 <td className="border px-4 py-2">{tx.date}</td>
-                                <td className="border px-4 py-2">{tx.isFraud ? 'Fraudulenta' : 'Legítima'}</td>
+                                <td className={`border px-4 py-2 ${tx.isFraud ? 'text-red-500' : 'text-green-500'}`}>
+                                    {tx.isFraud ? 'Fraudulenta' : 'Legítima'}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

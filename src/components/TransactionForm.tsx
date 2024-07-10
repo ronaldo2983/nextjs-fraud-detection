@@ -5,26 +5,38 @@ import { useState } from 'react';
 export default function TransactionForm() {
     const [cardNumber, setCardNumber] = useState<string>('');
     const [amount, setAmount] = useState<string>('');
-    const [location, setLocation] = useState<string>(''); // Set default value if needed
-    const [merchant, setMerchant] = useState<string>(''); // Set default value if needed
+    const [location, setLocation] = useState<string>(''); 
+    const [merchant, setMerchant] = useState<string>(''); 
     const [date, setDate] = useState<string>('');
     const [result, setResult] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Lógica para determinar si la transacción es fraudulenta
-        const amountNumber = parseFloat(amount);
-        if (amountNumber > 900) {
-            setResult('Transacción Fraudulenta');
-        } else {
-            setResult('Transacción No Fraudulenta');
-        }
+        const isFraudulent = parseFloat(amount) > 900;
+
+        // Crear la transacción
+        const transaction = {
+            cardNumber,
+            amount,
+            location,
+            merchant,
+            date,
+            isFraud: isFraudulent,
+        };
+
+        // Guardar la transacción en localStorage
+        const existingTransactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+        existingTransactions.push(transaction);
+        localStorage.setItem('transactions', JSON.stringify(existingTransactions));
+
+        // Mostrar el resultado
+        setResult(isFraudulent ? 'Transacción fraudulenta' : 'Transacción legítima');
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-                <h1 className="text-2xl font-bold mb-6 text-center">Ingresar Transacción</h1>
+                <h1 className="text-2xl font-bold mb-6">Ingresar Transacción</h1>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <input 
                         type="text" 
@@ -82,15 +94,11 @@ export default function TransactionForm() {
                     </button>
                 </form>
                 {result && (
-                    <div 
-                        className={`mt-4 p-4 text-center text-lg font-semibold rounded-md ${
-                            result === 'Transacción Fraudulenta' 
-                            ? 'bg-red-500 text-white' 
-                            : 'bg-green-500 text-white'
-                        }`}
+                    <p 
+                        className={`mt-4 text-center text-lg ${result.includes('fraudulenta') ? 'text-red-500' : 'text-green-500'} animate-pulse`}
                     >
-                        {result}
-                    </div>
+                        Resultado: {result}
+                    </p>
                 )}
             </div>
         </div>
