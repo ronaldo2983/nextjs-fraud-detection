@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 
 interface Transaction {
     cardNumber: string;
@@ -25,14 +24,6 @@ export default function TransactionHistory() {
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-4xl">
-                <div className="flex justify-between mb-6">
-                    <Link href="/transaction" className="text-blue-500 hover:underline">
-                        Transacciones
-                    </Link>
-                    <Link href="/historial" className="text-blue-500 hover:underline">
-                        Historial
-                    </Link>
-                </div>
                 <h2 className="text-2xl font-bold mb-6">Historial de Transacciones</h2>
                 <table className="w-full table-auto border-collapse">
                     <thead>
