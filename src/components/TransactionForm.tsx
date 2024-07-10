@@ -7,12 +7,14 @@ export default function TransactionForm() {
     const [amount, setAmount] = useState<string>('');
     const [location, setLocation] = useState<string>(''); 
     const [merchant, setMerchant] = useState<string>(''); 
-    const [date, setDate] = useState<string>('');
     const [result, setResult] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const isFraudulent = parseFloat(amount) > 900;
+
+        // Obtener la fecha y hora actual
+        const currentDateTime = new Date().toLocaleString();
 
         // Crear la transacción
         const transaction = {
@@ -20,7 +22,7 @@ export default function TransactionForm() {
             amount,
             location,
             merchant,
-            date,
+            date: currentDateTime,  // Fecha y hora actuales
             isFraud: isFraudulent,
         };
 
